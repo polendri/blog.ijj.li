@@ -1,9 +1,18 @@
 $color-primary: #dd2c00 !default;
 $color-primary-text: #fff !default;
+$color-primary-text-faded: rgba($color-primary-text, .75) !default;
 $color-secondary: #455a64 !default;
 $color-secondary-text: #fff !default;
+$color-secondary-text-faded: rgba($color-secondary-text, .75) !default;
+$color-background: #f8f8f8 !default;
+$color-background-text: #222 !default;
+$color-background-text-faded: rgba($color-background-text, .75) !default;
 $color-link: #dd2c00 !default;
 
-$break-md: 48em;
-$break-lg: 62em;
-$break-xl: 76em;
+$font-heading: "Fira Sans", Helvetica, sans-serif;
+$font-text: Helvetica, sans-serif;
+
+$break-sm: 48em;
+$break-md: 62em;
+$break-lg: 76em;
+$break-xl: 90em;

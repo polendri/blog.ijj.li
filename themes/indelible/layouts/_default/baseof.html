@@ -37,10 +37,10 @@
         <img class="navbar__logo" src="/images/logo.jpg" alt="Site logo"/>
         <a class="navbar__title" href="{{ .Site.BaseURL }}"><h1>{{ .Site.Title }}</h1></a>
         <p class="navbar__description">
-        {{ with .Site.Params.description }}{{.}}{{ else }}
-        A minimalist and responsive theme for <a href="https://gohugo.io/">Hugo</a>, based on
-        <a href="https://github.com/spf13/hyde">Hyde</a>.
-        {{end}}
+          {{ with .Site.Params.description }}{{.}}{{ else }}
+          A minimalist and responsive theme for <a href="https://gohugo.io/">Hugo</a>, based on
+          <a href="https://github.com/spf13/hyde">Hyde</a>.
+          {{end}}
         </p>
       </header>
       <nav class="navbar__nav">
@@ -57,8 +57,8 @@
       </footer>
     </aside>
 
-    <main id="content" class="content container">
-    {{ block "main" . -}}{{- end }}
+    <main id="content" class="content">
+      {{ block "main" . -}}{{- end }}
     </main>
 
     <script>

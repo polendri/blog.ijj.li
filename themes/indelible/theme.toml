@@ -1,1 +1,4 @@
 name = "Indelible"
+
+[params]
+mainSections = ["post"]
