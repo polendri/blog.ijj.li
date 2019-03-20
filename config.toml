@@ -1,0 +1,8 @@
+baseURL = "https://blog.ijj.li/"
+languageCode = "en-ca"
+title = "Algorithmic!"
+theme = "indelible"
+
+[params]
+description = "Paul Hendry's blog on software and not‑software."
+copyright = "© 2019 Paul Hendry"
