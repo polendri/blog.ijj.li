@@ -8,11 +8,13 @@ $color-background: #f8f8f8 !default;
 $color-background-text: #222 !default;
 $color-background-text-faded: rgba($color-background-text, .75) !default;
 $color-link: #dd2c00 !default;
+$color-border: #ddd !default;
 
-$font-heading: "Fira Sans", Helvetica, sans-serif;
-$font-text: Helvetica, sans-serif;
+$font-heading: "Fira Sans", Helvetica, sans-serif !default;
+$font-text: Helvetica, sans-serif !default;
+$font-code: "Fira Mono", monospace !default;
 
-$break-sm: 48em;
-$break-md: 62em;
-$break-lg: 76em;
-$break-xl: 90em;
+$break-sm: 48em !default;
+$break-md: 62em !default;
+$break-lg: 76em !default;
+$break-xl: 90em !default;

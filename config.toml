@@ -2,6 +2,8 @@ baseURL = "https://blog.ijj.li/"
 languageCode = "en-ca"
 title = "Algorithmic!"
 theme = "indelible"
+pygmentsStyle = "monokai"
+pygmentsCodeFences = true
 
 [params]
 description = "A blog on software and not‑software."

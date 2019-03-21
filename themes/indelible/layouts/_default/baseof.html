@@ -29,6 +29,16 @@
     <!-- RSS -->
     <link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
 
+    <!-- KaTeX math typesetting-->
+    {{ if or .Params.math .Site.Params.math }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer
+            src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"
+            crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+    {{ end }}
+
     {{ partial "head_end.html" . }}
   </head>
   <body>
