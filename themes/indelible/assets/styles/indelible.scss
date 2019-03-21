@@ -290,7 +290,8 @@ $sidebar-width-xl: 24rem;
 }
 
 // Posts
-.post__date {
+.post__meta {
   display: block;
   color: $color-background-text-faded;
+  font-size: .75rem;
 }

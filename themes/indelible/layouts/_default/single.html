@@ -1,7 +1,16 @@
 {{ define "main" -}}
 <div class="post">
   <h1>{{ .Title }}</h1>
-  <time datetime={{ .Date.Format "2006-01-02T15:04:05Z0700" }} class="post__date">{{ .Date.Format "Mon, Jan 2, 2006" }}</time>
+  <div class="post__meta">
+      <time datetime={{ .Date.Format "2006-01-02T15:04:05Z0700" }}>{{ .Date.Format "January 2, 2006" }}</time>
+      {{ if and (isset $.Params "categories") (gt (len $.Params.categories) 0)}}
+      | Category: {{ range $.Params.categories }}<a href="{{ $.Site.BaseURL }}categories/{{ . | urlize | lower }}">{{ . }}</a>{{ end }}
+      {{ end }}
+      {{ if and (isset $.Params "tags") (gt (len $.Params.tags) 0)}}
+      | Tags: {{ range $.Params.tags }}<a href="{{ $.Site.BaseURL }}tags/{{ . | urlize | lower }}">{{ . }}</a>{{ end }}
+      {{ end }}
+      | Reading time: {{ $.ReadingTime }} minutes
+  </div>
   {{ .Content }}
 </div>
 {{- end }}
