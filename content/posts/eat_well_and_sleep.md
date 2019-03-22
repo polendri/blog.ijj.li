@@ -6,17 +6,10 @@ tags = []
 draft = true
 +++
 
-What if I told you there was One Simple Trick™ to mastering motivation, and that self-help gurus hate me because I'll
-tell it to you?
-
-Right, you'd probably close the tab immediately. So let me put it this way instead: if you're working towards a goal
-and having a hard time staying motivated, then my suggestion is this: before you do anything else, just focus on eating
-well and sleeping.
-
 Sleep and diet have a huge effect on decision-making[^1][^2], in a way that's really difficult to recognize in the
 moment. When you're tired, the chocolate looks more tempting than the running shoes; when your blood sugar is low,
 the TV looks more tempting than the job applications. If you're sleep-deprived and you're eating poorly, then trying
-to achieve your end goal is like running a marathon with a pair of koalas stubbornly wrapped around your legs. I
+to achieve an end goal is like running a marathon with a pair of koalas stubbornly wrapped around your legs. I
 mean, if you work hard you can probably do it, but... don't you think you should probably deal with those koalas
 first? Maybe you can lure them off of you with some eucalyptus leaves?
 

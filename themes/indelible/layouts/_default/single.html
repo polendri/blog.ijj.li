@@ -1,15 +1,17 @@
 {{ define "main" -}}
 <div class="post">
-  <h1>{{ .Title }}</h1>
+  <h1 class="post__title">{{ .Title }}</h1>
   <div class="post__meta">
+      {{ if not .Date.IsZero }}
       <time datetime={{ .Date.Format "2006-01-02T15:04:05Z0700" }}>{{ .Date.Format "January 2, 2006" }}</time>
-      {{ if and (isset $.Params "categories") (gt (len $.Params.categories) 0)}}
-      | Category: {{ range $.Params.categories }}<a href="{{ $.Site.BaseURL }}categories/{{ . | urlize | lower }}">{{ . }}</a>{{ end }}
+      {{ with $.Params.categories }}
+      | Category: {{ range $cat := . }}<a href="{{ $.Site.BaseURL }}categories/{{ $cat | urlize | lower }}">{{ $cat }}</a>{{ end }}
       {{ end }}
-      {{ if and (isset $.Params "tags") (gt (len $.Params.tags) 0)}}
-      | Tags: {{ range $.Params.tags }}<a href="{{ $.Site.BaseURL }}tags/{{ . | urlize | lower }}">{{ . }}</a>{{ end }}
+      {{ with $.Params.tags }}
+      | Tags: {{ range $tag := . }}<a href="{{ $.Site.BaseURL }}tags/{{ $tag | urlize | lower }}">{{ $tag }}</a>{{ end }}
       {{ end }}
       | Reading time: {{ $.ReadingTime }} minutes
+      {{ end }}
   </div>
   {{ .Content }}
 </div>

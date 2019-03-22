@@ -54,6 +54,7 @@ em {
   font-style: italic;
 }
 h1, h2, h3 {
+  margin-bottom: 1rem;
   color: $color-primary;
   font-family: $font-heading;
 }
@@ -151,7 +152,7 @@ $sidebar-width-xl: 24rem;
 .navbar {
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 2rem;
   text-align: center;
   background-color: $color-secondary;
@@ -290,8 +291,10 @@ $sidebar-width-xl: 24rem;
 }
 
 // Posts
+.post__title {
+  margin-bottom: 0;
+}
 .post__meta {
-  display: block;
   color: $color-background-text-faded;
   font-size: .75rem;
 }

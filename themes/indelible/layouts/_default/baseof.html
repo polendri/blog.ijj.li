@@ -23,8 +23,9 @@
 
     <!-- Icons -->
     <!-- TODO -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
-    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="icon" type="image/png" href="/images/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/images/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon_96x96.png" sizes="96x96">
 
     <!-- RSS -->
     <link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
@@ -44,7 +45,7 @@
   <body>
     <aside class="navbar">
       <header>
-        <img class="navbar__logo" src="/images/logo.jpg" alt="Site logo"/>
+        <img class="navbar__logo" src="/images/logo.png" alt="Site logo"/>
         <a class="navbar__title" href="{{ .Site.BaseURL }}"><h1>{{ .Site.Title }}</h1></a>
         <p class="navbar__description">
           {{ with .Site.Params.description }}{{.}}{{ else }}
