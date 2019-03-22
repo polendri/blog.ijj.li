@@ -3,7 +3,6 @@ title = "Eat Well and Sleep"
 date = "2019-03-21T14:14:37-07:00"
 categories = ["lifestyle"]
 tags = []
-draft = true
 +++
 
 Sleep and diet have a huge effect on decision-making[^1][^2], in a way that's really difficult to recognize in the
