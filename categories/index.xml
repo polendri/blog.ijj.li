@@ -10,5 +10,14 @@
 	<atom:link href="https://blog.ijj.li/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>Lifestyle</title>
+      <link>https://blog.ijj.li/categories/lifestyle/</link>
+      <pubDate>Thu, 21 Mar 2019 14:14:37 -0700</pubDate>
+      
+      <guid>https://blog.ijj.li/categories/lifestyle/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

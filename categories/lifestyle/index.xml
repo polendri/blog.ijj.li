@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Algorithmic!</title>
-    <link>https://blog.ijj.li/</link>
-    <description>Recent content on Algorithmic!</description>
+    <title>Lifestyle on Algorithmic!</title>
+    <link>https://blog.ijj.li/categories/lifestyle/</link>
+    <description>Recent content in Lifestyle on Algorithmic!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ca</language>
     <lastBuildDate>Thu, 21 Mar 2019 14:14:37 -0700</lastBuildDate>
     
-	<atom:link href="https://blog.ijj.li/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.ijj.li/categories/lifestyle/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,16 +18,6 @@
       
       <guid>https://blog.ijj.li/posts/eat_well_and_sleep/</guid>
       <description>Sleep and diet have a huge effect on decision-making12, in a way that&amp;rsquo;s really difficult to recognize in the moment. When you&amp;rsquo;re tired, the chocolate looks more tempting than the running shoes; when your blood sugar is low, the TV looks more tempting than the job applications. If you&amp;rsquo;re sleep-deprived and you&amp;rsquo;re eating poorly, then trying to achieve an end goal is like running a marathon with a pair of koalas stubbornly wrapped around your legs.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://blog.ijj.li/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.ijj.li/about/</guid>
-      <description>My name is Paul, and I write code in the Great White North. I got my BMath at UWaterloo and since then I&amp;rsquo;ve been mostly doing full-stack web development. On the side, I spend a lot of time with Rust and functional programming.
-As a carbon-based organic life form just like you, I stop coding sometimes to read, run, game, walk my dog, and fit in quality time with my very busy wife.</description>
     </item>
     
   </channel>
