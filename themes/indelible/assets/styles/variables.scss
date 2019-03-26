@@ -9,6 +9,8 @@ $color-background-text: #222 !default;
 $color-background-text-faded: rgba($color-background-text, .75) !default;
 $color-link: #dd2c00 !default;
 $color-border: #ddd !default;
+$color-blockquote: #ddd !default;
+$color-blockquote-text: $color-background-text !default;
 
 $font-heading: "Fira Sans", Helvetica, sans-serif !default;
 $font-text: Helvetica, sans-serif !default;
