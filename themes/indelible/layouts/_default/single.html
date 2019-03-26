@@ -14,5 +14,25 @@
       {{ end }}
   </div>
   {{ .Content }}
+  {{ if and .Site.Params.remarkUrl (not .Params.noComments) }}
+  <div class="post__comments">
+    <h2>Comments</h2>
+    <div id="remark42"></div>
+  </div>
+  {{ end }}
 </div>
+{{- end }}
+
+{{ define "onload" -}}
+{{ if and .Site.Params.remarkUrl (not .Params.noComments) }}
+window.remark_config = {
+  site_id: "remark",
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "{{ .Site.Params.remarkUrl }}/web/embed.js";
+  (d.head || d.body).appendChild(s);
+})();
+{{ end }}
 {{- end }}

@@ -1,6 +1,7 @@
 +++
 title = "About"
 menu = "main"
+noComments = true
 +++
 
 My name is Paul, and I write code in the Great White North. I got my BMath at UWaterloo and since then I've been mostly

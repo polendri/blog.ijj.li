@@ -8,3 +8,4 @@ pygmentsCodeFences = true
 [params]
 description = "A blog on software and not‑software."
 copyright = "© 2019 Paul Hendry"
+remarkUrl = "https://remark.ijj.li"
