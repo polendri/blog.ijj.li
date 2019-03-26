@@ -136,12 +136,67 @@ What's this? How did [GraphQL](https://graphql.org/learn/) get into this paper f
 
 ## Chapter 4: Designing the Web Architecture: Problems and Insights
 
-TODO
+To expand on the general properties from Chapter 2, we describe some further requirements that are specific to Web
+architectures.
+
+* A low barrier to entry for everyone (readers, authors, and developers). Hypertext and HTML were chosen for this
+  because:
+  * For users, it's simple to navigate pages via hyperlinks;
+  * For authors, it's simple to link to content, in particular because the content itself doesn't need to exist yet in
+    order to define a link;
+  * For developers, it's simple to implement because all the protocols were defined as text, making them easy to inspect
+    and interactively test.
+* Extensibility
+* Distributed content
+* Internet-scale (in the sense that it needs to be tolerant of a chaotic Internet where network traffic is unpredictable
+  and servers can be deployed/retired at will)
+
+We then describe some of the additional challenges of trying to achieve these goals while building on top of the
+existing URI, HTTP and HTML standards rather than replacing them.
 
 ## Chapter 5: Representational State Transfer (REST)
+
+With all of that background out of the way, we finally turn to deriving REST itself. In proper scientific fashion, we
+start with a "null" architecture and build upon it using the constraints we've been laying out in previous chapters.
+
+### Deriving REST
+
+The first two constraints are the client-server and stateless styles. Both of these are deemed necessary just due to the
+scale of the Internet: we keep implementations simple by separating the providers of the content (servers) from the
+consumers (clients), and we can't afford to have servers maintain per-client state if they're to work at the scale we
+envision.
+
+The next constraint is caching: if we're going to minimize network usage and user-perceived latency, we want an
+architecture that allows us to cache content effectively.
+
+Before we go any further, let's admire part of one of the diagrams in this section:
+
+![Snippet of a diagram in the paper with object titled "Internet News" accompanied by a lightning bolt](/images/notes_on_roy_fielding's_rest_paper/chap5_internet_news.png)
+
+BAM, INTERNET NEWS! Oh year 2000 Roy, if you only knew where Internet news was going.
+
+Back to constraints, we add "uniform interface" next. This, Fielding describes as the core things that differentiates
+REST from other architectural styles. REST ensures that every service works through a uniform interface, which aims to
+improve the simplicity and scalability of the architecture (at a modest cost to network efficiency). The constraints
+which achieve this uniform interface are described later.
+
+Nearly finished with the constraining now! The penultimate constraint is layering: the ability to build hierarchical
+layers in the system to encapsulate or "hide" different layers. This enables a great deal of scalability, e.g. with
+load balancers spreading traffic across a number of servers, and it also provides the flexibility to evolve systems by
+introducing layers to handle legacy servers or clients. The downside of layering is the extra latency/overhead, but
+we're hoping that we can offset this with clever use of caching.
+
+Finally, we've got code-on-demand: enabling (or at least not preventing) servers to supply code to clients for the
+client to execute. In the age of endless web apps this seems obvious, but I think it's worth appreciating that this got
+factored in to Web specifications as early as it did. JavaScript was only a few years old at the time, and it wasn't at
+all clear at that point that scripting would be an integral part of the Web.
+
+### REST Architectural Elements
 
 TODO
 
 ## Chapter 6: Experience and Evaluation
 
 TODO
+
+## Conclusions
