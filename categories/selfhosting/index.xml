@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>selfhosting on Algorithmic!</title>
+    <link>https://blog.ijj.li/categories/selfhosting/</link>
+    <description>Recent content in selfhosting on Algorithmic!</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-ca</language>
+    <lastBuildDate>Mon, 13 Apr 2020 00:00:00 -0400</lastBuildDate>
+    
+	<atom:link href="https://blog.ijj.li/categories/selfhosting/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Secure Self-hosting, Part 1: Overview of Tools</title>
+      <link>https://blog.ijj.li/posts/secure_services_with_podman_part_1/</link>
+      <pubDate>Mon, 13 Apr 2020 00:00:00 -0400</pubDate>
+      
+      <guid>https://blog.ijj.li/posts/secure_services_with_podman_part_1/</guid>
+      <description>This post is Part 1 in a series on secure self-hosting.
+In 2020, I&amp;rsquo;ve been on a quest to build the perfect infrastructure for self-hosting services, both private ones for my LAN and public hobby projects. The goals I&amp;rsquo;ve been looking to achieve with my setup are simple:
+ Automated: It should take a single command to provision a system, upgrade a system, and start or stop a service. Reproducible: If I destroy a VPS instance or physically fry a home computer, it should be trivial to start over on a fresh system.</description>
+    </item>
+    
+  </channel>
+</rss>

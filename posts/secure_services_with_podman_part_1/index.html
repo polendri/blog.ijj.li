@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  xml:lang="en-ca" lang="en-ca" >
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.68.3" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Secure Self-hosting, Part 1: Overview of Tools &middot; Algorithmic!</title>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.ijj.li/styles/reset.min.016f7c821fb21d21a058b7d16220580f4eac2356bf8a95340fc50f4efa7a64fb.css">
+  
+  <link rel="stylesheet" href="https://blog.ijj.li/styles/indelible.min.11064eb2fdaaed7b00a9ff2655911749aa6da1d3bdb3eb68be69445c54c270e6.css">
+  
+  <link rel="stylesheet" href="https://blog.ijj.li/styles/print.min.88f66c2d75d44a7ad1a3e09472fb85f21aab9837940a3adfbad2f24fe2a7642f.css" media="print">
+
+  
+  
+  <link rel="icon" type="image/png" href="/images/favicon_16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/images/favicon_32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicon_96x96.png" sizes="96x96">
+
+  
+  <link href="" rel="alternate"
+    type="application/rss+xml" title="Algorithmic!" />
+
+  
+  
+
+  
+</head>
+
+<body>
+  <aside class="navbar">
+    <header>
+      <img class="navbar__logo" src="/images/logo.png" alt="Site logo" />
+      <a class="navbar__title" href="https://blog.ijj.li/">
+        <h1>Algorithmic!</h1>
+      </a>
+      <p class="navbar__description">
+        A blog on software and not‑software.
+      </p>
+    </header>
+    <nav class="navbar__nav">
+      <ul>
+        <li><a class="nav__link" href="/about/"> About </a></li><li><a class="nav__link" href="/posts/"> Posts </a></li>
+      </ul>
+    </nav>
+    <footer class="navbar__footer">
+      © 2019 Paul Hendry
+    </footer>
+  </aside>
+
+  <main id="content" class="content">
+    <div class="post">
+  <h1 class="post__title">Secure Self-hosting, Part 1: Overview of Tools</h1>
+  <div class="post__meta">
+      
+      <time datetime=2020-04-13T00:00:00-0400>April 13, 2020</time>
+      
+      | Category: <a href="https://blog.ijj.li/categories/selfhosting">selfhosting</a>
+      
+      
+      | Reading time: 6 minutes
+      
+  </div>
+  <p><em>This post is Part 1 in a series on secure self-hosting.</em></p>
+<p>In 2020, I&rsquo;ve been on a quest to build the perfect infrastructure for self-hosting services, both private ones for my
+LAN and public hobby projects. The goals I&rsquo;ve been looking to achieve with my setup are simple:</p>
+<ul>
+<li><strong>Automated</strong>: It should take a single command to provision a system, upgrade a system, and start or stop a service.</li>
+<li><strong>Reproducible</strong>: If I destroy a VPS instance or physically fry a home computer, it should be trivial to start over
+on a fresh system.</li>
+<li><strong>Secure</strong>: It should follow every security best practice it possibly can.</li>
+</ul>
+<p>I&rsquo;ve settled on three tools for building this infrastructure: <a href="https://www.terraform.io/">Terraform</a>,
+<a href="https://www.ansible.com/">Ansible</a>, and <a href="https://podman.io/">Podman</a>.</p>
+<h2 id="managing-cloud-infrastructure-with-terraform">Managing cloud infrastructure with Terraform</h2>
+<p>Terraform is a tool that enables you to declaratively define your cloud infrastructure and then create and destroy it
+with a simple command. For example, this blog runs on a DigitalOcean VPS instance configured like this:</p>
+<pre><code>provider &quot;digitalocean&quot; {
+  token = var.digitalocean_token
+}
+
+resource &quot;digitalocean_droplet&quot; &quot;ijj_li&quot; {
+  image    = &quot;ubuntu-19-10-x64&quot;
+  name     = &quot;ijj.li&quot;
+  region   = &quot;tor1&quot;
+  size     = &quot;s-1vcpu-1gb&quot;
+  ssh_keys = var.digitalocean_ssh_keys
+}
+
+resource &quot;digitalocean_floating_ip_assignment&quot; &quot;ijj_li&quot; {
+  ip_address = var.floating_ip
+  droplet_id = digitalocean_droplet.ijj_li.id
+}
+</code></pre><p>What this says is:</p>
+<ul>
+<li>I want a 1GB Droplet created, running the Ubuntu 19.10 image.</li>
+<li>I want an existing floating IP (which I point my <code>ijj.li</code> DNS entry to so that it&rsquo;s easy to swap between hosts)
+mapped to this newly-created droplet.</li>
+</ul>
+<p>Teraform can create that infrastructure, and when you make modifications later on, it&rsquo;s able to intelligently decide
+what needs to change in order for things to match your new configuration.</p>
+<h2 id="ansible-for-administering-hosts">Ansible for administering hosts</h2>
+<p>Ansible is an extremely generic tool for &ldquo;doing things on remote hosts&rdquo;, which it accomplishes via SSH. It can run
+arbitrary commands, but also has modules to greatly simplify common operations like installing packages and manipulating
+files.</p>
+<p>A task for creating a user on the remote host looks like this:</p>
+<pre><code>- name: &quot;Create 'srv' user for running services&quot;
+    user:
+      name: &quot;srv&quot;
+      group: &quot;users&quot;
+</code></pre><p>This invokes the &ldquo;user&rdquo; module with some parameters in order to add a <code>srv</code> users belonging to the <code>users</code> group. Tasks
+run in &ldquo;playbooks&rdquo; (essentially sequences of tasks), so a playbook can contain a sequence of tasks which fully
+configure a system.</p>
+<p>What makes this especially magical is the way that Ansible tasks are designed to be idempotent: if you were to run the
+above &ldquo;Create user&rdquo; task a second time, you would find that it still runs successfully. The only difference is that
+Ansible&rsquo;s output, instead of saying &ldquo;changed&rdquo;, would say &ldquo;ok&rdquo; to indicate that the host&rsquo;s state already matches what
+the task declares. This makes Ansible tasks somewhat declarative as well: you tasks can define the way you want a host
+to be set up, and you can freely re-run your playbooks as you develop them.</p>
+<p>I had stayed away from Ansible for several years because I disliked the way that it isn&rsquo;t truly declarative. If you
+write a task to modify a config file and then later on you remove that task, nothing will undo that modification for
+you; it&rsquo;s on you to clean that up. Fully declarative systems like <a href="https://nixos.org/">NixOS</a> (where the state of your
+entire host is defined in a single config file) and <a href="https://www.docker.com/">Docker</a> container images (which start from
+a clean base image every time) provide complete assurance that there&rsquo;s no untracked configuration, so Ansible is a bit
+of a dirty compromise to me.</p>
+<p>A dirty compromise it may be to a perfectionist like me, but I think what I needed to accept sooner was that for
+self-hosting purposes, you just can&rsquo;t avoid having regular old stateful hosts. The bottom line is that all sorts of
+devices on my home network can&rsquo;t host Docker images or run NixOS: my printserver on a Raspberry Pi Zero for example, or
+my router.</p>
+<p>But <em>everything</em> runs SSH, so everything can be administered with Ansible so long as my admin machine has its SSH key
+installed on the host. That means Ansible can be a single, centralized place for administering my entire network.
+Very handy!</p>
+<h2 id="podman-for-managing-containerized-services">Podman for managing containerized services</h2>
+<p>Podman is a Docker alternative developed by Red Hat; essentially it&rsquo;s less mature and rougher around the edges, but
+makes some different and advantageous architectural choices compared to Docker.</p>
+<p>The key difference between Podman and Docker is that Podman is daemonless: unlike Docker, there&rsquo;s no daemon process
+running as root which manages containers.</p>
+<p>This has a number of implications:</p>
+<ul>
+<li>Any daemon running as root is a security liability, since if it were to be compromised, an attacker can leverage it
+for root access of the system. This has been leveraged in the past with the Docker daemon. No daemon means a smaller
+attack surface.</li>
+<li>Since there&rsquo;s no daemon to do its own container lifecycle management, using Podman is dependent on using the host&rsquo;s
+service manager (e.g. systemd) for starting, stopping and restarting containers. This a simplification of the overall
+system (since the existing service manager is being used instead of adding another manager to do the same thing), but
+since systemd isn&rsquo;t tightly integrated with Podman, it&rsquo;s overall a bit more work to set up.</li>
+<li>This makes it possible to run Podman as an unprivileged user, something I make use of extensively.</li>
+<li>There&rsquo;s no tool like Docker&rsquo;s <a href="https://github.com/pyouroboros/ouroboros">Ouroboros</a> to automatically keep container
+images up-to-date, since Ouroboros relies on accessing the Docker daemon to start/restart containers. For Podman,
+we would need to do this as a non-containerized service on the host.</li>
+</ul>
+<p>I like the &ldquo;technically correct&rdquo; design choices of Podman compared to Docker, but I had a tough time choosing between
+the two because the immaturity of Podman as a project really does have an impact on using it (mainly just how little
+documentation, blogs, and StackOverflow answers exist out there for it). Docker even has a
+<a href="https://docs.docker.com/engine/security/rootless/">rootless mode</a> these days, negating one of the key advantages of
+Podman.</p>
+<p>What it came down to was one blocker with Docker: host volume mounts can&rsquo;t have their permissions set for use by a
+non-root user inside the container. I&rsquo;ll get into it in later posts, but running as a non-root user inside containers is
+an important security practice for me, so I need to be able to set the permissions of mounted volumes such that the user
+in the container can access them. With Podman, I can run <code>podman unshare chown -R 1000:100 mydir</code> on the host, to set
+its permissions so that the container user with UID 1000 can access the <code>mydir</code> volume.</p>
+<p>The purpose of using containers is twofold for me:</p>
+<ol>
+<li>Provide a way to cleanly install and run services without gumming up the host system over time (with installed
+dependencies, leftover data/config files, etc)</li>
+<li>Securely isolate services from the host system so that the host system is safe if they&rsquo;re compromised.</li>
+</ol>
+<h2 id="whats-next">What&rsquo;s next</h2>
+<p>With these three tools, we can build a super-secure, easy-to-administer foundation for self-hosting. In the next post,
+I&rsquo;ll get into those security practices and how they guide the design and configuration of my hosts.</p>
+<p>The config for my infrastructure is available for viewing at <a href="https://github.com/polendri/infrastructure,">https://github.com/polendri/infrastructure,</a> feel free to
+take a look!</p>
+
+  
+</div>
+  </main>
+
+  <script>
+    window.onload = function () {
+      if (window.location.pathname !== "/") {
+        var contentY = document.getElementById("content").getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, contentY);
+      }
+      { { block "onload". -} } { { - end } }
+    };
+  </script>
+</body>
+
+</html>

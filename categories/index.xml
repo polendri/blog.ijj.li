@@ -6,10 +6,19 @@
     <description>Recent content in Categories on Algorithmic!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ca</language>
-    <lastBuildDate>Tue, 01 Oct 2019 00:00:00 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 13 Apr 2020 00:00:00 -0400</lastBuildDate>
     
 	<atom:link href="https://blog.ijj.li/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>selfhosting</title>
+      <link>https://blog.ijj.li/categories/selfhosting/</link>
+      <pubDate>Mon, 13 Apr 2020 00:00:00 -0400</pubDate>
+      
+      <guid>https://blog.ijj.li/categories/selfhosting/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>compsci</title>
