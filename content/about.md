@@ -12,5 +12,4 @@ quality time with my very busy wife.
 
 Most of what I work on can be found on [GitHub](https://github.com/pshendry).
 
-Shoot me an email (<a href="mailto:&#112;&#097;&#117;&#108;&#064;&#112;&#115;&#104;&#101;&#110;&#100;&#114;&#121;&#046;&#099;&#111;&#109;">&#112;&#097;&#117;&#108;&#064;&#112;&#115;&#104;&#101;&#110;&#100;&#114;&#121;&#046;&#099;&#111;&#109;</a>)
-if you've got something to share! No spam, schemes, or related villainy please.
+Shoot me an email (paul at ijj.li) if you've got something to share! No spam, schemes, or related villainy please.
