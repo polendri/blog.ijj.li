@@ -1,12 +1,11 @@
 +++
-title = "Self-hosting Secure Services Using Podman, Part 1"
+title = "Secure Self-hosting, Part 1: Overview of Tools"
 date = "2020-04-13T00:00:00-04:00"
 categories = ["selfhosting"]
 tags = []
-draft = true
 +++
 
-_This post is Part 1 in a series._
+_This post is Part 1 in a series on secure self-hosting._
 
 In 2020, I've been on a quest to build the perfect infrastructure for self-hosting services, both private ones for my
 LAN and public hobby projects. The goals I've been looking to achieve with my setup are simple:
@@ -16,7 +15,7 @@ LAN and public hobby projects. The goals I've been looking to achieve with my se
   on a fresh system.
 - **Secure**: It should follow every security best practice it possibly can.
 
-I've settled on three tools for building this infrastructure, [Terraform](https://www.terraform.io/),
+I've settled on three tools for building this infrastructure: [Terraform](https://www.terraform.io/),
 [Ansible](https://www.ansible.com/), and [Podman](https://podman.io/).
 
 ## Managing cloud infrastructure with Terraform
@@ -67,8 +66,9 @@ A task for creating a user on the remote host looks like this:
       group: "users"
 ```
 
-This invokes the "user" module with some parameters. Tasks run in "playbooks" (essentially sequences of tasks), so a
-playbook can contain a sequence of tasks which fully configure a system.
+This invokes the "user" module with some parameters in order to add a `srv` users belonging to the `users` group. Tasks
+run in "playbooks" (essentially sequences of tasks), so a playbook can contain a sequence of tasks which fully
+configure a system.
 
 What makes this especially magical is the way that Ansible tasks are designed to be idempotent: if you were to run the
 above "Create user" task a second time, you would find that it still runs successfully. The only difference is that
@@ -83,9 +83,10 @@ entire host is defined in a single config file) and [Docker](https://www.docker.
 a clean base image every time) provide complete assurance that there's no untracked configuration, so Ansible is a bit
 of a dirty compromise to me.
 
-A dirty compromise it may be, but I think what I needed to accept sooner was that for self-hosting purposes, you just
-can't avoid having regular old stateful hosts. The bottom line is that all sorts of devices on my home network can't
-host Docker images or run NixOS: my printserver on a Raspberry Pi Zero for example, or my router.
+A dirty compromise it may be to a perfectionist like me, but I think what I needed to accept sooner was that for
+self-hosting purposes, you just can't avoid having regular old stateful hosts. The bottom line is that all sorts of
+devices on my home network can't host Docker images or run NixOS: my printserver on a Raspberry Pi Zero for example, or
+my router.
 
 But _everything_ runs SSH, so everything can be administered with Ansible so long as my admin machine has its SSH key
 installed on the host. That means Ansible can be a single, centralized place for administering my entire network.
@@ -115,7 +116,7 @@ This has a number of implications:
 
 I like the "technically correct" design choices of Podman compared to Docker, but I had a tough time choosing between
 the two because the immaturity of Podman as a project really does have an impact on using it (mainly just how little
-documentation, blogs, and StackOverflow answers that exist out there for it). Docker even has a
+documentation, blogs, and StackOverflow answers exist out there for it). Docker even has a
 [rootless mode](https://docs.docker.com/engine/security/rootless/) these days, negating one of the key advantages of
 Podman.
 
