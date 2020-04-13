@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Algorithmic!</title>
@@ -6,12 +6,22 @@
     <description>Recent content in Categories on Algorithmic!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ca</language>
+    <lastBuildDate>Tue, 01 Oct 2019 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="https://blog.ijj.li/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Lifestyle</title>
+      <title>compsci</title>
+      <link>https://blog.ijj.li/categories/compsci/</link>
+      <pubDate>Tue, 01 Oct 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://blog.ijj.li/categories/compsci/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lifestyle</title>
       <link>https://blog.ijj.li/categories/lifestyle/</link>
       <pubDate>Thu, 21 Mar 2019 14:14:37 -0700</pubDate>
       

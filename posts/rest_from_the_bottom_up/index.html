@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-ca" lang="en-ca">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="generator" content="Hugo 0.68.3" />
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rest from the Bottom Up &middot; Algorithmic!</title>
+
+    
+    
+    <link rel="stylesheet" href="https://blog.ijj.li/styles/reset.min.016f7c821fb21d21a058b7d16220580f4eac2356bf8a95340fc50f4efa7a64fb.css">
+    
+    <link rel="stylesheet" href="https://blog.ijj.li/styles/indelible.min.11064eb2fdaaed7b00a9ff2655911749aa6da1d3bdb3eb68be69445c54c270e6.css">
+    
+    <link rel="stylesheet" href="https://blog.ijj.li/styles/print.min.88f66c2d75d44a7ad1a3e09472fb85f21aab9837940a3adfbad2f24fe2a7642f.css" media="print">
+
+    
+    
+    <link rel="icon" type="image/png" href="/images/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/images/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon_96x96.png" sizes="96x96">
+
+    
+    <link href="" rel="alternate" type="application/rss+xml" title="Algorithmic!" />
+
+    
+    
+
+    
+  </head>
+  <body>
+    <aside class="navbar">
+      <header>
+        <img class="navbar__logo" src="/images/logo.png" alt="Site logo"/>
+        <a class="navbar__title" href="https://blog.ijj.li/"><h1>Algorithmic!</h1></a>
+        <p class="navbar__description">
+          A blog on software and not‑software.
+        </p>
+      </header>
+      <nav class="navbar__nav">
+        <ul>
+          <li><a class="nav__link" href="/about/"> About </a></li><li><a class="nav__link" href="/posts/"> Posts </a></li>
+        </ul>
+      </nav>
+      <footer class="navbar__footer">
+        © 2019 Paul Hendry
+      </footer>
+    </aside>
+
+    <main id="content" class="content">
+      <div class="post">
+  <h1 class="post__title">Rest from the Bottom Up</h1>
+  <div class="post__meta">
+      
+      <time datetime=2019-10-01T00:00:00-0500>October 1, 2019</time>
+      
+      | Category: <a href="https://blog.ijj.li/categories/compsci">compsci</a>
+      
+      
+      | Reading time: 14 minutes
+      
+  </div>
+  <p><em>This post was featured in the <a href="https://artandlogic.com/2019/10/rest-from-the-bottom-up/#more-29675">Art+Logic Blog</a>.</em></p>
+<p>The RESTful API has a funny place in the software development world: it&rsquo;s widely regarded as the best general-purpose pattern for building web application APIs, and yet it&rsquo;s also nebulous enough of a concept to cause endless disagreements within teams over exactly how to implement one.</p>
+<p>Do I make my endpoint <code>/company/123/</code> or <code>/companies/123/</code>? How about <code>/companies/123/locations/</code> vs <code>/locations/?company=123</code> ? How do I handle versioning the API? Why <em>shouldn&rsquo;t</em> I send a POST request to trigger an action on the server? If a backend task can take many seconds to process, how do I represent that in the API?</p>
+<p>Questions like these are asked and answered (in different ways) all over the Internet, and it can be frustrating to make sense of it all. In search of a better understanding of REST, I decided to go straight to the source: Roy Fielding&rsquo;s year 2000 dissertation defining REST. What I found was not exactly what I was expecting, and yet I came away with a surprising amount of practical insights to apply to my API designs.</p>
+<p>We&rsquo;re going to walk through this paper chapter by chapter to see what there is to learn. Here&rsquo;s a link to it in full if you&rsquo;d like to follow along: <a href="https://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf">https://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf</a></p>
+<h2 id="chapter-1-software-architecture">Chapter 1: Software Architecture</h2>
+<p>The opening chapter goes to great lengths to define &ldquo;architectural style&rdquo; and related terms. While it makes for dry reading, it&rsquo;s important, since there are subtle distinctions to make clear. In particular, what we would informally call &ldquo;software architecture&rdquo; is given the specific term &ldquo;architectural style&rdquo; here, and the term &ldquo;software architecture&rdquo; is reserved to describe a <em>specific</em> implementation of an architectural style.</p>
+<p>The main motivation for this is to keep discussions of architecture well-grounded in the actual operation of the software, particularly with regards to data. &ldquo;Box and line&rdquo; architecture diagrams ignore data entirely, and so they don&rsquo;t properly capture the behaviour of software. When we think of &ldquo;software architecture&rdquo; as an abstraction of the <em>run-time</em> elements of a software system, this makes explicit that different phases of a program&rsquo;s operation (initialization, processing, shutdown, etc) might have different architectures, with yet another architecture responsible for transitioning between these phases. An architecture <em>style</em>, then, is a higher-level description of a &ldquo;class&rdquo; of software architectures.</p>
+<p>For reference, here are all of these terms and their definitions:</p>
+<p>software architecture : An abstraction of the run-time elements of a software system during some phase of its operation. A system may be composed of many levels of abstraction and many phases of operation, each with its own software architecture.</p>
+<p>element : A software architecture is defined by a configuration of architectural <strong>elements</strong>—components, connectors, and data—constrained in their relationships in order to achieve a desired set of architectural properties.</p>
+<p>component : An abstract unit of software instructions and internal state that provides a transformation of data via its interface.</p>
+<p>connector : An abstract mechanism that mediates communication, coordination, or cooperation among components.</p>
+<p>datum : An element of information that is transferred from a component, or received by a component, via a connector.</p>
+<p>configuration : The structure of architectural relationships among components, connectors, and data during a period of system run-time.</p>
+<p>architectural style : A coordinated set of architectural constraints that restricts the roles/features of architectural elements and the allowed relationships among those elements within any architecture that conforms to that style.</p>
+<h2 id="chapter-2-network-based-application-architectures">Chapter 2: Network-based Application Architectures</h2>
+<p>Next, Fielding defines a list of properties of architectural styles that are valuable or interesting, so that later we can evaluate a whole host of architectural styles against these properties.</p>
+<p>The properties considered are:</p>
+<ul>
+<li><strong>Performance:</strong>
+<ul>
+<li><strong>Network performance:</strong> Does it send a lot of data over the network?</li>
+<li><strong>User-perceived performance:</strong> Does it have low latency? Does it render quickly?</li>
+<li><strong>Network efficiency:</strong> Can it avoid using the network, e.g. via caching?</li>
+</ul>
+</li>
+<li><strong>Scalability:</strong> Can it scale to a large number of components?</li>
+<li><strong>Simplicity:</strong> Is it easy to understand and implement?</li>
+<li><strong>Modifiability:</strong>
+<ul>
+<li><strong>Evolvability:</strong> Can a component be changed without affecting other components?</li>
+<li><strong>Extensibility:</strong> Is it easy to add functionality to the system?</li>
+<li><strong>Customizability:</strong> Is it easy to override or specialize its behavior for unusual requirements?</li>
+<li><strong>Configurability:</strong> Can it be easily adapted post-deployment?</li>
+<li><strong>Reusability:</strong> Are its components generic enough to be reusable for other applications?</li>
+</ul>
+</li>
+<li><strong>Visibility:</strong> Is it easy to view the operation of the system externally?</li>
+<li><strong>Portability:</strong> Is it portable across many runtime environments?</li>
+<li><strong>Reliability:</strong> How susceptible is it to failure?</li>
+</ul>
+<p>I think this list is such a fantastic set of evaluation criteria that it&rsquo;s worth printing out and using as a checklist for any architectural task. The subtle distinctions between evolvability, extensibility, customizability, configurability and reusability are particularly handy; it&rsquo;s entirely possible to make a super-extensible system that isn&rsquo;t customizable, for example, or a super-customizable system that isn&rsquo;t configurable.</p>
+<h3 id="aside-security">Aside: Security</h3>
+<p>Reading this paper in 2019, one important property seems conspicuously absent from the list:</p>
+<ul>
+<li><strong>Security:</strong> Will I get pwned by running this system?</li>
+</ul>
+<p>It&rsquo;s a window into a simpler time, to see security absent from a meticulous list of criteria used to evaluate systems which among other things <em>send raw code back and forth between clients and servers</em>. In this paper, security sees only casual mentions, and the ability for network firewalls to inspect unencrypted data over-the-wire is seen as a desirable feature.</p>
+<p>While security should be a top consideration for any architecture today, REST stands the test of time by virtue of relying on the security of the underlying protocol on which it&rsquo;s based (HTTP). It&rsquo;s worth noting that it&rsquo;s through other architectural properties that it has been able to achieve this: its evolvability allows HTTPS to be used, and its extensibility allows authentication/authorization to be layered on top of it by applications.</p>
+<h2 id="chapter-3-network-based-architectural-styles">Chapter 3: Network-based Architectural Styles</h2>
+<p>With the evaluation properties defined, Fielding evaluates a range of architectural styles, unsurprisingly settling on a REST-like architecture as the winner. This is a hard chapter to summarize, so I&rsquo;d recommend reading through it in full. Essentially, each style is given an acronym so that combinations of styles can be referred to by one big acronym.</p>
+<p>Styles evaluated are (with very brief descriptions provided here when relevant):</p>
+<ul>
+<li>Data-flow Styles
+<ul>
+<li>Pipe and Filter (PF)</li>
+<li>Uniform Pipe and Filter (UPF): For example, Unix command-line applications</li>
+</ul>
+</li>
+<li>Replication Styles
+<ul>
+<li>Replicated Repository (RR): Replicating data across multiple services</li>
+<li>Cache ($): RR variant where only requested data is replicated</li>
+</ul>
+</li>
+<li>Hierarchical Styles
+<ul>
+<li>Client-Server (CS)</li>
+<li>Layered System (LS): System organized into a hierarchy of layers</li>
+<li>Layered-Client-Server (LCS)</li>
+<li>Client-Stateless-Server (CSS)</li>
+<li>Client-Cache-Stateless-Server (C$SS)</li>
+<li>Layered-Client-Cache-Stateless-Server (LC$SS)</li>
+<li>Remote Session (RS): Application state kept entirely on the server</li>
+<li>Remote Data Access (RDA): Client performs database queries directly on the server</li>
+</ul>
+</li>
+<li>Mobile Code Styles:
+<ul>
+<li>Virtual Machine (VM): Executing code in a controlled environment</li>
+<li>Remote Evaluation (REV): Delegating expensive operations to a remote site for evaluation</li>
+<li>Code on Demand (COD): Component queries a remote server for the know-how to process a resource</li>
+<li>Layered-Code-on-Demand-Client-Cache-Stateless-Server (LCODC$SS)</li>
+<li>Mobile Agent (MA): Extension of RE and COD style where the agent performing computation &ldquo;moves&rdquo; from client to
+server and back</li>
+</ul>
+</li>
+<li>Peer-to-Peer Styles:
+<ul>
+<li>Event-based Integration (EBI): components trigger and listen for events rather than integrating directly with other
+components</li>
+<li>C2</li>
+<li>Distributed Objects</li>
+<li>Brokered Distributed Objects</li>
+</ul>
+</li>
+</ul>
+<p>Here&rsquo;s the final evaluation summary from the chapter: each property has <code>+</code> or <code>-</code> characters proportional to a rough measure of how beneficial or detrimental the style is to that property.</p>
+<p><img src="/images/rest_from_the_bottom_up/chap3_comparison.png" alt="The evaluation summary, in its full terse glory"></p>
+<p>In the end, we find that &ldquo;LCODC$SS&rdquo; appears to be the overall winner; that&rsquo;s short for <em>Layered</em>, <em>Code-On-Demand</em>, <em>Client Cache</em>, <em>Stateless Server</em>. Sound familiar? With &ldquo;layering&rdquo; referring to gateways and proxies, &ldquo;code on demand&rdquo; referring to JavaScript, and caching/statelessness being common aspects of HTTP services, what we&rsquo;re describing here is the Web as we know it.</p>
+<p>This analysis not only provides the justification for the fundamental properties of REST as an architecture, but like Chapter 2, it&rsquo;s a useful reminder of everything that&rsquo;s out there for you to consider. Many of the architectures considered here have fallen out of favour, but that doesn&rsquo;t mean they&rsquo;re not still relevant today; every problem is different, and while REST works well for traditional web resources, it&rsquo;s not the right tool for every job.</p>
+<h3 id="aside-remote-data-access">Aside: &ldquo;Remote Data Access&rdquo;</h3>
+<p>As a side note, I couldn&rsquo;t help but notice that one of the mentioned styles sounded familiar&hellip;</p>
+<blockquote>
+<p>The <strong>remote data access</strong> style is a variant of client-server that spreads the application state across both
+client and server. A client sends a database query in a standard format, such as SQL, to a remote server. The server
+allocates a workspace and performs the query, which may result in a very large data set. The client can then make
+further operations upon the result set (such as table joins) or retrieve the result one piece at a time. The client
+must know about the data structure of the service to build structure-dependent queries.</p>
+</blockquote>
+<p>What&rsquo;s this? How did <a href="https://graphql.org/learn/">GraphQL</a> get into this paper from the year 2000?</p>
+<p>It&rsquo;s good to be reminded that some of these hot new tools are iterations on ideas that are decades old.</p>
+<h2 id="chapter-4-designing-the-web-architecture-problems-and-insights">Chapter 4: Designing the Web Architecture: Problems and Insights</h2>
+<p>To expand on the general properties from Chapter 2, Fielding describes some further requirements that are specific to Web architectures:</p>
+<ul>
+<li>A low barrier to entry for everyone (readers, authors, and developers). Hypertext and HTML were chosen for this because:
+<ul>
+<li>For users, it&rsquo;s simple to navigate pages via hyperlinks;
+&laquo;&laquo;&laquo;&lt; HEAD</li>
+<li>For authors, it&rsquo;s simple to link to content, in particular because the content itself doesn&rsquo;t need to exist yet in order to define a link;</li>
+<li>
+<h1 id="for-developers-its-simple-to-implement-because-all-the-protocols-are-defined-as-text-making-them-easy-to-inspect-and-interactively-test">For developers, it&rsquo;s simple to implement because all the protocols are defined as text, making them easy to inspect and interactively test.</h1>
+</li>
+<li>For authors, it&rsquo;s simple to link to content, in particular because the content itself doesn&rsquo;t need to exist yet in
+order to define a link;</li>
+<li>For developers, it&rsquo;s simple to implement because all the protocols are defined as text, making them easy to inspect
+and interactively test.
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>83d54e6a0099ac718236c88dfccb7b8b18dd67ea</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>Extensibility</li>
+<li>Distributed content</li>
+<li>Internet-scale (in the sense that it needs to be tolerant of a chaotic Internet where network traffic is unpredictable and servers can be deployed/retired at will)</li>
+</ul>
+<p>He also describes some of the additional challenges of trying to achieve these goals while building on top of the existing URI, HTTP and HTML standards rather than replacing them.</p>
+<h2 id="chapter-5-representational-state-transfer-rest">Chapter 5: Representational State Transfer (REST)</h2>
+<p>With all of that background out of the way, we finally turn to deriving REST itself. In proper scientific fashion, we start with a &ldquo;null&rdquo; architecture and build upon it using the constraints we&rsquo;ve been laying out in previous chapters.</p>
+<h3 id="deriving-rest">Deriving REST</h3>
+<p>The first two constraints are the client-server and stateless styles. Both of these are deemed necessary just due to the scale of the Internet: we keep implementations simple by separating the providers of the content (servers) from the consumers (clients), and we can&rsquo;t afford to have servers maintain per-client state if they&rsquo;re to work at the scale we envision.</p>
+<p>The next constraint is caching: if we&rsquo;re going to minimize network usage and user-perceived latency, we want an architecture that allows us to cache content effectively.</p>
+<p>Before we go any further, let&rsquo;s just admire the diagram displaying &ldquo;Internet News&rdquo; with a big exciting lightning bolt:</p>
+<p><img src="/images/rest_from_the_bottom_up/chap5_internet_news.png" alt="Snippet of a diagram in the paper with object titled &ldquo;Internet News&rdquo; accompanied by a lightning bolt"></p>
+<p>Back to constraints, we add &ldquo;uniform interface&rdquo; next. Fielding describes this as the core thing that differentiates REST from other architectural styles. REST ensures that every service works through a uniform interface, which aims to improve the simplicity and scalability of the architecture (at a modest cost to network efficiency). The constraints which achieve this uniform interface are described later.</p>
+<p>Nearly finished with the constraining now! The penultimate constraint is layering: the ability to build hierarchical layers in the system to encapsulate or &ldquo;hide&rdquo; different layers. This enables a great deal of scalability, e.g. with load balancers spreading traffic across a number of servers, and it also provides the flexibility to evolve systems by
+introducing layers to handle legacy servers or clients. The downside of layering is the extra latency/overhead, but we&rsquo;re hoping that we can offset this with clever use of caching.</p>
+<p>Finally, we&rsquo;ve got code-on-demand: enabling (or at least not preventing) servers to supply code to clients for the client to execute. In the age of endless web apps this seems obvious, but I think it&rsquo;s worth appreciating that this got factored in to Web specifications as early as it did. JavaScript was only a few years old at the time, and it wasn&rsquo;t at all clear at that point that scripting would be an integral part of the Web.</p>
+<h3 id="rest-architectural-elements">REST Architectural Elements</h3>
+<p>Chapter 5.2 is where we finally define REST in concrete terms.</p>
+<p>Many people jump straight to this section when trying to better understand REST, but this tells you the &ldquo;what&rdquo; without the &ldquo;why&rdquo; from the earlier chapters. Without understanding the derivation of REST, it&rsquo;s easy to misunderstand the problems that REST aims to solve.</p>
+<p>Here&rsquo;s an overview of its architectural elements:</p>
+<h4 id="data-elements">Data Elements</h4>
+<p>A <em>resource</em> is essentially any information that can be named, and a <em>resource identifier</em> is a means to access a <em>resource</em> (usually a URL). A key property of resources is that they do <em>not</em> necessarily have any direct correspondence with an underlying representation or storage location. For example:</p>
+<ul>
+<li>Two companies 1 and 2 might have similar identifiers (<code>/companies/1</code> and <code>/companies/2</code>) even though their data resides on separate servers;</li>
+<li>&ldquo;Companies that user ABC has favorited&rdquo; is a resource, even though it describes information which can change over time;</li>
+<li>&ldquo;Currently active users&rdquo; is a resource even though it&rsquo;s constructed from live information that isn&rsquo;t persisted anywhere.</li>
+</ul>
+<p>While this is a simple concept, libraries like Ruby on Rails and Django Rest Framework make directly converting backend models into REST resources so easy that developers often fall into it as the default. This can create an undesirable coupling between client and server (where every backend database change requires a corresponding frontend change), and unnecessary frontend complexity (where clients collect and process raw data rather than rely on the server to present it to them that way).</p>
+<h4 id="connectors-and-components">Connectors and Components</h4>
+<p>REST separates concerns with a variety of &ldquo;connector&rdquo; types: Client, Server, Cache, Resolver (i.e. DNS), and Tunnel (e.g. TLS).</p>
+<p>A key aspect is the stateless communication between these connectors. Statelessness accomplishes four things:</p>
+<ol>
+<li>It reduces the resource requirements of the connectors</li>
+<li>It allows parallel processing of requests</li>
+<li>It allows an intermediary to understand a request in isolation, which is useful for dynamically modifying/reordering
+requests</li>
+<li>It forces all the information that&rsquo;s relevant for caching to be present in the request</li>
+</ol>
+<h4 id="overall-view">Overall View</h4>
+<p>With all these components in place, we have:</p>
+<ul>
+<li>User Agent which can submit concurrent stateless requests</li>
+<li>A DNS service which translates request URLs into addressable network locations</li>
+<li>The ability to have Proxies, allowing clients to access resources through an intermediate location</li>
+<li>The ability to have Gateways (i.e. reverse proxies), allowing servers to provided resources through an intermediate
+location</li>
+<li>The capability of introducing caching at any of these layers in order to avoid redundant network requests</li>
+</ul>
+<p>As an example, we can model a Process View of a complex system, showing off what&rsquo;s possible with the flexibility of this architecture:</p>
+<p><img src="/images/rest_from_the_bottom_up/chap5_rest_view.png" alt="Process View of a REST system"></p>
+<h2 id="chapter-6-experience-and-evaluation">Chapter 6: Experience and Evaluation</h2>
+<p>While interesting due to the historical context it provides, we&rsquo;ll skip this section for today since most of the details here aren&rsquo;t as relevant to modern-day systems.</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>Going into this, I was hoping to gain specific insights on building good RESTful APIs. What I got instead was insight into software architecture design in the very broadest sense. The bigger take-away from this dissertation, for someone like me at least, is not any particular detail about REST itself but rather the overall design process that created it. The evaluation criteria from Chapter 2 (performance, reusability, etc) and the architectural styles from Chapter 3 are as useful for defining your own architecture as they are for defining REST.</p>
+<p>And while brushing up on these foundational REST concepts doesn&rsquo;t directly answer any of those practical &ldquo;detail questions&rdquo; when building Web APIs, it&rsquo;s&hellip; more immediately helpful than you might think. If you can&rsquo;t recall why modifying state in response to a GET request is OK, you can &ldquo;derive&rdquo; the answer by remembering that a caching layer could stop repeated GET requests from hitting the server. If you&rsquo;re not sure how to version your API, you can remember that both URIs and headers affect caching, so either way will do. If you&rsquo;re not sure whether to choose <code>/companies/123/locations/</code> as a resource vs <code>/locations/?company=123</code>, you can remember that resources don&rsquo;t need to
+have any relation to the underlying data, so you can choose whichever one is nicer to use in the client.</p>
+<p>Perhaps most of all, it&rsquo;s a good reminder that most of time when we developers debate what&rsquo;s &ldquo;RESTful&rdquo; and what&rsquo;s &ldquo;not RESTful&rdquo;, what we&rsquo;re really debating is conventions. The flexibility of REST is the reason we have so much to debate, but it&rsquo;s also the reason that REST is everywhere.</p>
+
+  
+</div>
+    </main>
+
+    <script>
+    window.onload = function() {
+        if (window.location.pathname !== "/") {
+            var contentY = document.getElementById("content").getBoundingClientRect().top + window.scrollY;
+            window.scrollTo(0, contentY);
+        }
+        
+    };
+    </script>
+  </body>
+</html>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Algorithmic!</title>
-    <link>https://blog.ijj.li/posts/</link>
-    <description>Recent content in Posts on Algorithmic!</description>
+    <title>compsci on Algorithmic!</title>
+    <link>https://blog.ijj.li/categories/compsci/</link>
+    <description>Recent content in compsci on Algorithmic!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ca</language>
     <lastBuildDate>Tue, 01 Oct 2019 00:00:00 -0500</lastBuildDate>
     
-	<atom:link href="https://blog.ijj.li/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.ijj.li/categories/compsci/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,15 +20,6 @@
       <description>This post was featured in the Art+Logic Blog.
 The RESTful API has a funny place in the software development world: it&amp;rsquo;s widely regarded as the best general-purpose pattern for building web application APIs, and yet it&amp;rsquo;s also nebulous enough of a concept to cause endless disagreements within teams over exactly how to implement one.
 Do I make my endpoint /company/123/ or /companies/123/? How about /companies/123/locations/ vs /locations/?company=123 ? How do I handle versioning the API?</description>
-    </item>
-    
-    <item>
-      <title>Eat Well and Sleep</title>
-      <link>https://blog.ijj.li/posts/eat_well_and_sleep/</link>
-      <pubDate>Thu, 21 Mar 2019 14:14:37 -0700</pubDate>
-      
-      <guid>https://blog.ijj.li/posts/eat_well_and_sleep/</guid>
-      <description>Sleep and diet have a huge effect on decision-making12, in a way that&amp;rsquo;s really difficult to recognize in the moment. When you&amp;rsquo;re tired, the chocolate looks more tempting than the running shoes; when your blood sugar is low, the TV looks more tempting than the job applications. If you&amp;rsquo;re sleep-deprived and you&amp;rsquo;re eating poorly, then trying to achieve an end goal is like running a marathon with a pair of koalas stubbornly wrapped around your legs.</description>
     </item>
     
   </channel>

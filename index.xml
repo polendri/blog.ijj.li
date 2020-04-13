@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Algorithmic!</title>
@@ -6,10 +6,21 @@
     <description>Recent content on Algorithmic!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ca</language>
-    <lastBuildDate>Thu, 21 Mar 2019 14:14:37 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 01 Oct 2019 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="https://blog.ijj.li/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Rest from the Bottom Up</title>
+      <link>https://blog.ijj.li/posts/rest_from_the_bottom_up/</link>
+      <pubDate>Tue, 01 Oct 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://blog.ijj.li/posts/rest_from_the_bottom_up/</guid>
+      <description>This post was featured in the Art+Logic Blog.
+The RESTful API has a funny place in the software development world: it&amp;rsquo;s widely regarded as the best general-purpose pattern for building web application APIs, and yet it&amp;rsquo;s also nebulous enough of a concept to cause endless disagreements within teams over exactly how to implement one.
+Do I make my endpoint /company/123/ or /companies/123/? How about /companies/123/locations/ vs /locations/?company=123 ? How do I handle versioning the API?</description>
+    </item>
     
     <item>
       <title>Eat Well and Sleep</title>
