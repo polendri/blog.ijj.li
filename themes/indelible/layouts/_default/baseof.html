@@ -1,85 +1,89 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"{{with .Site.LanguageCode}} xml:lang="{{.}}" lang="{{.}}"{{end}}>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    {{ .Hugo.Generator }}
+<html xmlns="http://www.w3.org/1999/xhtml" {{with .Site.LanguageCode}} xml:lang="{{.}}" lang="{{.}}" {{end}}>
 
-    <!-- Enable responsiveness on mobile devices-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  {{ hugo.Generator }}
 
-    {{ if .IsHome -}}
-    <title>{{ .Site.Title }}</title>
-    {{- else -}}
-    <title>{{ .Title }} &middot; {{ .Site.Title }}</title>
-    {{- end }}
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CSS -->
-    {{ $reset := resources.Get "styles/reset.css" | resources.Minify | resources.Fingerprint  }}
-    <link rel="stylesheet" href="{{ $reset.Permalink }}">
-    {{ $style := resources.Get "styles/indelible.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
-    <link rel="stylesheet" href="{{ $style.Permalink }}">
-    {{ $print := resources.Get "styles/print.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
-    <link rel="stylesheet" href="{{ $print.Permalink }}" media="print">
+  {{ if .IsHome -}}
+  <title>{{ .Site.Title }}</title>
+  {{- else -}}
+  <title>{{ .Title }} &middot; {{ .Site.Title }}</title>
+  {{- end }}
 
-    <!-- Icons -->
-    <!-- TODO -->
-    <link rel="icon" type="image/png" href="/images/favicon_16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/images/favicon_32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon_96x96.png" sizes="96x96">
+  <!-- CSS -->
+  {{ $reset := resources.Get "styles/reset.css" | resources.Minify | resources.Fingerprint  }}
+  <link rel="stylesheet" href="{{ $reset.Permalink }}">
+  {{ $style := resources.Get "styles/indelible.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $style.Permalink }}">
+  {{ $print := resources.Get "styles/print.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $print.Permalink }}" media="print">
 
-    <!-- RSS -->
-    <link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+  <!-- Icons -->
+  <!-- TODO -->
+  <link rel="icon" type="image/png" href="/images/favicon_16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/images/favicon_32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicon_96x96.png" sizes="96x96">
 
-    <!-- KaTeX math typesetting-->
-    {{ if or .Params.math .Site.Params.math }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer
-            src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"
-            crossorigin="anonymous"
-            onload="renderMathInElement(document.body);"></script>
-    {{ end }}
+  <!-- RSS -->
+  <link href="{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}" rel="alternate"
+    type="application/rss+xml" title="{{ .Site.Title }}" />
 
-    {{ partial "head_end.html" . }}
-  </head>
-  <body>
-    <aside class="navbar">
-      <header>
-        <img class="navbar__logo" src="/images/logo.png" alt="Site logo"/>
-        <a class="navbar__title" href="{{ .Site.BaseURL }}"><h1>{{ .Site.Title }}</h1></a>
-        <p class="navbar__description">
-          {{ with .Site.Params.description }}{{.}}{{ else }}
-          A minimalist and responsive theme for <a href="https://gohugo.io/">Hugo</a>, based on
-          <a href="https://github.com/spf13/hyde">Hyde</a>.
-          {{end}}
-        </p>
-      </header>
-      <nav class="navbar__nav">
-        <ul>
-          {{ range .Site.Menus.main -}}
-          <li><a class="nav__link" href="{{.URL}}"> {{ .Name }} </a></li>
-          {{- end }}
-        </ul>
-      </nav>
-      <footer class="navbar__footer">
-        {{ with .Site.Params.copyright }}{{.}}{{ else }}
-        &copy; {{ now.Format "2006"}}. All rights reserved.
-        {{ end }}
-      </footer>
-    </aside>
+  <!-- KaTeX math typesetting-->
+  {{ if or .Params.math .Site.Params.math }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  {{ end }}
 
-    <main id="content" class="content">
-      {{ block "main" . -}}{{- end }}
-    </main>
+  {{ partial "head_end.html" . }}
+</head>
 
-    <script>
-    window.onload = function() {
-        if (window.location.pathname !== "/") {
-            var contentY = document.getElementById("content").getBoundingClientRect().top + window.scrollY;
-            window.scrollTo(0, contentY);
-        }
-        {{ block "onload" . -}}{{- end }}
+<body>
+  <aside class="navbar">
+    <header>
+      <img class="navbar__logo" src="/images/logo.png" alt="Site logo" />
+      <a class="navbar__title" href="{{ .Site.BaseURL }}">
+        <h1>{{ .Site.Title }}</h1>
+      </a>
+      <p class="navbar__description">
+        {{ with .Site.Params.description }}{{.}}{{ else }}
+        A minimalist and responsive theme for <a href="https://gohugo.io/">Hugo</a>, based on
+        <a href="https://github.com/spf13/hyde">Hyde</a>.
+        {{end}}
+      </p>
+    </header>
+    <nav class="navbar__nav">
+      <ul>
+        {{ range .Site.Menus.main -}}
+        <li><a class="nav__link" href="{{.URL}}"> {{ .Name }} </a></li>
+        {{- end }}
+      </ul>
+    </nav>
+    <footer class="navbar__footer">
+      {{ with .Site.Params.copyright }}{{.}}{{ else }}
+      &copy; {{ now.Format "2006"}}. All rights reserved.
+      {{ end }}
+    </footer>
+  </aside>
+
+  <main id="content" class="content">
+    {{ block "main" . -}}{{- end }}
+  </main>
+
+  <script>
+    window.onload = function () {
+      if (window.location.pathname !== "/") {
+        var contentY = document.getElementById("content").getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, contentY);
+      }
+      { { block "onload". -} } { { - end } }
     };
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>
